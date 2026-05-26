@@ -53,6 +53,18 @@
                 <tr><td class="label">分类</td><td>${product.categoryName}</td></tr>
                 <tr><td class="label">价格</td><td>¥${product.price}</td></tr>
                 <tr><td class="label">库存</td><td>${product.stock}</td></tr>
+                <tr><td class="label">商品图片</td><td>
+                    <c:choose>
+                        <c:when test="${not empty product.imageUrl}">
+                            <c:set var="imgSrc" value="${product.imageUrl}"/>
+                            <c:if test="${!product.imageUrl.startsWith('http')}">
+                                <c:set var="imgSrc" value="${pageContext.request.contextPath}/${product.imageUrl}"/>
+                            </c:if>
+                            <img src="${imgSrc}" style="max-width:200px;max-height:200px;border:1px solid #eee;border-radius:4px;">
+                        </c:when>
+                        <c:otherwise><span style="color:#999;">暂无</span></c:otherwise>
+                    </c:choose>
+                </td></tr>
                 <tr><td class="label">状态</td><td>${product.status == 1 ? '已上架' : '已下架'}</td></tr>
                 <tr><td class="label">创建时间</td><td><fmt:formatDate value="${product.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td></tr>
                 <tr><td class="label">更新时间</td><td><fmt:formatDate value="${product.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td></tr>

@@ -34,13 +34,41 @@
     .nav-menu a{display:inline-block;padding:12px 20px;font-weight:500;}
     .nav-menu a.active{color:#4CAF50;border-bottom:2px solid #4CAF50;}
     .main-content{display:flex;margin-top:10px;}
-    .left-cate{width:200px;background:white;border:1px solid #eee;}
-    .cate-item{padding:12px 15px;border-bottom:1px solid #f4f4f4;}
+    .left-cate{width:200px;background:white;border:1px solid #eee;overflow:visible;position:relative;z-index:10;}
+    .cate-item{padding:12px 15px;border-bottom:1px solid #f4f4f4;position:relative;cursor:pointer;}
+    .cate-item:hover{background:#f0faf0;}
     .cate-item i{color:#4CAF50;margin-right:8px;}
     .sub-cate{margin-top:5px;font-size:12px;color:#666;}
     .sub-cate a{margin-right:8px;}
-    .banner{flex:1;background:linear-gradient(135deg,#81C784,#4CAF50);margin:0 10px;display:flex;align-items:center;justify-content:center;color:white;font-size:60px;font-weight:bold;text-align:center;min-height:200px;}
+    .cate-popup{display:none;position:absolute;left:100%;top:0;width:580px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,.12);z-index:200;min-height:280px;}
+    .cate-item:hover .cate-popup{display:block;}
+    .popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .popup-group{margin-bottom:4px;}
+    .popup-group-title{font-size:14px;font-weight:bold;color:#333;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid #4CAF50;}
+    .popup-group a{display:inline-block;font-size:13px;color:#666;margin-right:12px;margin-bottom:6px;text-decoration:none;}
+    .popup-group a:hover{color:#4CAF50;}
+    .popup-footer{padding:10px 0 0;margin-top:10px;border-top:1px solid #eee;text-align:center;}
+    .popup-footer a{color:#409EFF;font-size:13px;text-decoration:none;}
+    .popup-footer a:hover{text-decoration:underline;}
+    .cate-hint{float:right;color:#ccc;font-size:10px;margin-top:2px;}
+    .banner{flex:1;margin:0 10px;min-height:200px;position:relative;overflow:hidden;border-radius:6px;}
     .banner .promo{color:#ffeb3b;}
+    .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:white;font-size:60px;font-weight:bold;text-align:center;opacity:0;transition:opacity .6s ease;cursor:pointer;text-decoration:none;}
+    .slide.active{opacity:1;}
+    .slide-1{background:linear-gradient(135deg,#81C784,#4CAF50);}
+    .slide-2{background:linear-gradient(135deg,#FFB74D,#FF9800);}
+    .slide-3{background:linear-gradient(135deg,#64B5F6,#1E88E5);}
+    .slide-4{background:linear-gradient(135deg,#CE93D8,#8E24AA);}
+    .slide .sub{display:block;font-size:16px;font-weight:normal;margin-top:8px;opacity:.9;}
+    .slide .badge{display:inline-block;background:rgba(255,255,255,.25);padding:4px 16px;border-radius:20px;font-size:16px;font-weight:normal;margin-top:12px;}
+    .slide .big-num{font-size:80px;margin:0 8px;}
+    .dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:2;}
+    .dots span{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:background .3s;}
+    .dots span.active{background:#fff;width:24px;border-radius:5px;}
+    .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;transition:background .3s;border:none;}
+    .arrow:hover{background:rgba(255,255,255,.4);}
+    .arrow-left{left:10px;}
+    .arrow-right{right:10px;}
     .right-sidebar{width:240px;}
     .section-title{margin:30px 0 15px;font-size:18px;font-weight:bold;display:flex;align-items:center;}
     .section-title i{color:#4CAF50;margin-right:8px;}
@@ -131,11 +159,64 @@
 <div class="container main-content">
   <div class="left-cate">
     <div class="cate-item">
-      <i class="fas fa-pills"></i> 中西药品
-      <div class="sub-cate">
-        <a href="${pageContext.request.contextPath}/product?action=list&categoryId=1">肠胃用药</a>
-        <a href="${pageContext.request.contextPath}/product?action=list&categoryId=2">感冒药</a>
-        <a href="${pageContext.request.contextPath}/product?action=list&categoryId=3">心脑血管</a>
+      <i class="fas fa-pills"></i> 中西药品 <span class="cate-hint">▸</span>
+      <div class="cate-popup">
+        <div class="popup-grid">
+          <div class="popup-group">
+            <div class="popup-group-title">肠胃用药</div>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=胃痛">胃痛</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=胃炎">胃炎</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=胃溃疡">胃溃疡</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=十二指肠溃疡">十二指肠溃疡</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=便秘">便秘</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=消化不良">消化不良</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=痔疮">痔疮</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=腹痛腹泻">腹痛腹泻</a>
+          </div>
+          <div class="popup-group">
+            <div class="popup-group-title">呼吸系统</div>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=支气管炎">支气管炎</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=咳嗽">咳嗽</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=哮喘">哮喘</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=气管炎">气管炎</a>
+          </div>
+          <div class="popup-group">
+            <div class="popup-group-title">心脑血管</div>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=高血压">高血压</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=冠心病">冠心病</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=高血脂">高血脂</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=脑血栓">脑血栓</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=外周血管疾病">外周血管疾病</a>
+          </div>
+          <div class="popup-group">
+            <div class="popup-group-title">风湿骨科</div>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=风湿病">风湿病</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=跌打损伤">跌打损伤</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=关节炎">关节炎</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=颈椎病">颈椎病</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=骨质疏松">骨质疏松</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=腰肌劳损">腰肌劳损</a>
+          </div>
+          <div class="popup-group">
+            <div class="popup-group-title">抗肿瘤药</div>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=肿瘤辅助药">肿瘤辅助药</a>
+          </div>
+          <div class="popup-group">
+            <div class="popup-group-title">皮肤科药</div>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=皮炎">皮炎</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=湿疹">湿疹</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=痤疮">痤疮</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=疱疹">疱疹</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=皮肤过敏">皮肤过敏</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=手足癣病">手足癣病</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=头皮糠疹">头皮糠疹</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=银屑病">银屑病</a>
+            <a href="${pageContext.request.contextPath}/product?action=search&keyword=烧烫伤">烧烫伤</a>
+          </div>
+        </div>
+        <div class="popup-footer">
+          <a href="${pageContext.request.contextPath}/product?action=list"><i class="fas fa-arrow-right"></i> 查看更多</a>
+        </div>
       </div>
     </div>
     <div class="cate-item">
@@ -171,9 +252,30 @@
       </div>
     </div>
   </div>
-  <div class="banner">
-    下载APP<br>
-    享<span class="promo">5元</span>无门槛券
+  <div class="banner" id="banner">
+    <a class="slide slide-1 active" href="${pageContext.request.contextPath}/product?action=list">
+      健康守护<br>专业购药
+      <span class="sub">药房网商城 您的健康守护者</span>
+    </a>
+    <a class="slide slide-2" href="${pageContext.request.contextPath}/product?action=list">
+      限时满减<br><span class="big-num">99</span>减<span class="big-num">20</span>
+      <span class="badge">全场通用</span>
+      <span class="sub">活动时间：即日起至月底</span>
+    </a>
+    <a class="slide slide-3" href="${pageContext.request.contextPath}/product?action=list">
+      正品保障<br>药房直送
+      <span class="sub">资质齐全 品质保障 放心买药</span>
+    </a>
+    <a class="slide slide-4" href="${pageContext.request.contextPath}/product?action=list">
+      新用户专享<br>首单包邮
+      <span class="badge">立即注册</span>
+      <span class="sub">首次下单享包邮服务</span>
+    </a>
+    <button class="arrow arrow-left" onclick="prevSlide()">‹</button>
+    <button class="arrow arrow-right" onclick="nextSlide()">›</button>
+    <div class="dots" id="dots">
+      <span class="active"></span><span></span><span></span><span></span>
+    </div>
   </div>
   <div class="right-sidebar">
     <div class="business-card" style="background:white;border:1px solid #eee;border-radius:8px;overflow:hidden;">
@@ -205,7 +307,7 @@
         <div class="goods-img">
           <c:choose>
             <c:when test="${not empty p.imageUrl}">
-              <img src="${p.imageUrl}" alt="${p.name}">
+              <img src="${p.imageUrl.startsWith('http') ? p.imageUrl : pageContext.request.contextPath.concat('/').concat(p.imageUrl)}" alt="${p.name}">
             </c:when>
             <c:otherwise>
               <i class="fas fa-pills" style="font-size:50px;color:#ccc;"></i>
@@ -223,6 +325,62 @@
     </c:if>
   </div>
   <div class="view-all"><a href="${pageContext.request.contextPath}/product?action=list">查看全部商品 &gt;</a></div>
+
+  <div class="section-title">
+    <i class="fas fa-home"></i> 家中常备
+  </div>
+  <div class="goods-list">
+    <c:forEach items="${homeEssentials}" var="p">
+    <a href="${pageContext.request.contextPath}/product?action=view&id=${p.id}" style="text-decoration:none;">
+      <div class="goods-item">
+        <div class="goods-img">
+          <c:choose>
+            <c:when test="${not empty p.imageUrl}">
+              <img src="${p.imageUrl.startsWith('http') ? p.imageUrl : pageContext.request.contextPath.concat('/').concat(p.imageUrl)}" alt="${p.name}">
+            </c:when>
+            <c:otherwise>
+              <i class="fas fa-pills" style="font-size:50px;color:#ccc;"></i>
+            </c:otherwise>
+          </c:choose>
+        </div>
+        <div class="goods-name">${p.name}</div>
+        <div class="goods-spec">${p.specification}</div>
+        <div class="goods-price">¥${p.price}起</div>
+      </div>
+    </a>
+    </c:forEach>
+    <c:if test="${empty homeEssentials}">
+      <div style="grid-column:1/6;text-align:center;padding:30px;color:#999;">暂无商品</div>
+    </c:if>
+  </div>
+
+  <div class="section-title">
+    <i class="fas fa-leaf"></i> 养生保健
+  </div>
+  <div class="goods-list">
+    <c:forEach items="${healthCare}" var="p">
+    <a href="${pageContext.request.contextPath}/product?action=view&id=${p.id}" style="text-decoration:none;">
+      <div class="goods-item">
+        <div class="goods-img">
+          <c:choose>
+            <c:when test="${not empty p.imageUrl}">
+              <img src="${p.imageUrl.startsWith('http') ? p.imageUrl : pageContext.request.contextPath.concat('/').concat(p.imageUrl)}" alt="${p.name}">
+            </c:when>
+            <c:otherwise>
+              <i class="fas fa-pills" style="font-size:50px;color:#ccc;"></i>
+            </c:otherwise>
+          </c:choose>
+        </div>
+        <div class="goods-name">${p.name}</div>
+        <div class="goods-spec">${p.specification}</div>
+        <div class="goods-price">¥${p.price}起</div>
+      </div>
+    </a>
+    </c:forEach>
+    <c:if test="${empty healthCare}">
+      <div style="grid-column:1/6;text-align:center;padding:30px;color:#999;">暂无商品</div>
+    </c:if>
+  </div>
 </div>
 <div class="fixed-toolbar">
   <div class="tool-btn"><i class="fas fa-headset"></i></div>
@@ -232,5 +390,6 @@
   <div class="tool-btn"><i class="fas fa-clipboard-list"></i></div>
   <div class="tool-btn"><i class="fas fa-chevron-up"></i></div>
 </div>
+<script src="${pageContext.request.contextPath}/js/index.js"></script>
 </body>
 </html>

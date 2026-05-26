@@ -80,7 +80,7 @@
     <div class="product-left">
         <div class="main-img">
             <c:choose>
-                <c:when test="${not empty product.imageUrl}"><img src="${product.imageUrl}" alt="${product.name}"></c:when>
+                <c:when test="${not empty product.imageUrl}"><img src="${product.imageUrl.startsWith('http') ? product.imageUrl : pageContext.request.contextPath.concat('/').concat(product.imageUrl)}" alt="${product.name}"></c:when>
                 <c:otherwise><i class="fas fa-pills" style="font-size:80px;color:#ccc;"></i></c:otherwise>
             </c:choose>
         </div>

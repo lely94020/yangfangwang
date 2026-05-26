@@ -20,6 +20,8 @@ public class HomeServlet extends HttpServlet {
         PageUtil page = new PageUtil(5);
         page.setCurrentPage(1);
         req.setAttribute("featuredProducts", productDao.findOnline(page));
+        req.setAttribute("homeEssentials", productDao.findOnlineByCategories("1,2", 10));
+        req.setAttribute("healthCare", productDao.findOnlineByCategories("5,6", 10));
         req.getRequestDispatcher("/pages/index.jsp").forward(req, resp);
     }
 }

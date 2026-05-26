@@ -30,6 +30,9 @@ public class AdminMemberServlet extends HttpServlet {
                 req.setAttribute("page", pageUtil);
                 req.getRequestDispatcher("/admin/member/list.jsp").forward(req, resp);
                 break;
+            case "status":
+                doStatus(req, resp);
+                break;
             default:
                 resp.sendRedirect(req.getContextPath() + "/admin/member?action=list");
         }
@@ -39,13 +42,18 @@ public class AdminMemberServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         if ("status".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            int status = Integer.parseInt(req.getParameter("status"));
-            memberDao.updateStatus(id, status);
+            doStatus(req, resp);
         } else if ("delete".equals(action)) {
             int id = Integer.parseInt(req.getParameter("id"));
             memberDao.delete(id);
+            resp.sendRedirect(req.getContextPath() + "/admin/member?action=list");
         }
+    }
+
+    private void doStatus(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        int status = Integer.parseInt(req.getParameter("status"));
+        memberDao.updateStatus(id, status);
         resp.sendRedirect(req.getContextPath() + "/admin/member?action=list");
     }
 }

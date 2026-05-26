@@ -49,7 +49,7 @@
         <div class="form-card">
             <h3 style="margin-bottom:20px;">编辑商品 #${product.id}</h3>
             <c:if test="${not empty error}"><div class="error">${error}</div></c:if>
-            <form action="${pageContext.request.contextPath}/admin/product" method="post">
+            <form action="${pageContext.request.contextPath}/admin/product" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="${product.id}">
                 <div class="form-row">
@@ -110,8 +110,26 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>商品图片URL</label>
-                    <input type="text" name="imageUrl" value="${product.imageUrl}">
+                    <label>当前图片</label>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <c:choose>
+                            <c:when test="${not empty product.imageUrl}">
+                                <c:set var="imgSrc" value="${product.imageUrl}"/>
+                                <c:if test="${!product.imageUrl.startsWith('http')}">
+                                    <c:set var="imgSrc" value="${pageContext.request.contextPath}/${product.imageUrl}"/>
+                                </c:if>
+                                <img src="${imgSrc}" style="max-width:120px;max-height:120px;border:1px solid #eee;border-radius:4px;">
+                            </c:when>
+                            <c:otherwise>
+                                <span style="color:#999;font-size:13px;">暂无图片</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>更换图片</label>
+                    <input type="file" name="imageFile" accept="image/*">
+                    <div style="font-size:12px;color:#999;margin-top:3px;">留空则保持原图，支持 JPG/PNG/GIF，不超过 5MB</div>
                 </div>
                 <div class="form-group">
                     <label>商品描述</label>

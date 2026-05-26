@@ -49,7 +49,7 @@
         <div class="form-card">
             <h3 style="margin-bottom:20px;">添加商品</h3>
             <c:if test="${not empty error}"><div class="error">${error}</div></c:if>
-            <form action="${pageContext.request.contextPath}/admin/product" method="post">
+            <form action="${pageContext.request.contextPath}/admin/product" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="add">
                 <div class="form-row">
                     <div class="form-group">
@@ -110,8 +110,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>商品图片URL</label>
-                    <input type="text" name="imageUrl" placeholder="可选，输入图片URL">
+                    <label>商品图片</label>
+                    <input type="file" name="imageFile" accept="image/*">
+                    <div style="font-size:12px;color:#999;margin-top:3px;">支持 JPG/PNG/GIF，不超过 5MB</div>
                 </div>
                 <div class="form-group">
                     <label>商品描述</label>

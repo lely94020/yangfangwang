@@ -50,6 +50,18 @@
         .view-mode{display:flex;gap:10px;margin-bottom:15px;}
         .view-mode button{padding:6px 16px;border:1px solid #dcdfe6;background:#fff;border-radius:4px;cursor:pointer;font-size:13px;}
         .view-mode button.active{background:#409EFF;color:#fff;border-color:#409EFF;}
+        /* 列表视图 */
+        .products-list{display:none;flex-direction:column;gap:10px;margin-bottom:30px;}
+        .products-list .product-card{display:flex;align-items:center;padding:15px;border:1px solid #eee;border-radius:6px;background:#fff;}
+        .products-list .product-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.1);}
+        .products-list .product-img{height:100px;min-width:100px;padding:10px;margin:0;}
+        .products-list .product-img img{max-height:80px;max-width:80px;}
+        .products-list .product-info{flex:1;padding:0 20px;border:none;}
+        .products-list .product-name{font-size:16px;white-space:normal;}
+        .products-list .product-spec{margin-bottom:0;}
+        .products-list .product-price{font-size:20px;}
+        .products-list .product-stock{text-align:right;min-width:80px;}
+        .products-list .product-card a{display:flex;align-items:center;width:100%;text-decoration:none;}
     </style>
 </head>
 <body>
@@ -99,19 +111,19 @@
 <div class="container">
     <div class="breadcrumb"><a href="${pageContext.request.contextPath}/">首页</a> &gt; 全部商品</div>
     <div class="view-mode">
-        <button class="active"><i class="fas fa-th-large"></i> 网格视图</button>
-        <button><i class="fas fa-list"></i> 列表视图</button>
+        <button class="active" onclick="setView('grid')"><i class="fas fa-th-large"></i> 网格视图</button>
+        <button onclick="setView('list')"><i class="fas fa-list"></i> 列表视图</button>
     </div>
     <c:choose>
         <c:when test="${not empty products}">
-            <div class="products-grid">
+            <div class="products-grid" id="productGrid">
                 <c:forEach items="${products}" var="p">
                 <a href="${pageContext.request.contextPath}/product?action=view&id=${p.id}" style="text-decoration:none;">
                     <div class="product-card">
                         <div class="product-img">
                             <c:choose>
                                 <c:when test="${not empty p.imageUrl}">
-                                    <img src="${p.imageUrl}" alt="${p.name}">
+                                    <img src="${p.imageUrl.startsWith('http') ? p.imageUrl : pageContext.request.contextPath.concat('/').concat(p.imageUrl)}" alt="${p.name}">
                                 </c:when>
                                 <c:otherwise>
                                     <i class="fas fa-pills" style="font-size:60px;color:#ccc;"></i>
@@ -124,6 +136,30 @@
                             <div class="product-price">¥${p.price}</div>
                             <div class="product-stock">库存：${p.stock}</div>
                         </div>
+                    </div>
+                </a>
+                </c:forEach>
+            </div>
+            <div class="products-list" id="productList" style="display:none;">
+                <c:forEach items="${products}" var="p">
+                <a href="${pageContext.request.contextPath}/product?action=view&id=${p.id}" style="text-decoration:none;">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <c:choose>
+                                <c:when test="${not empty p.imageUrl}">
+                                    <img src="${p.imageUrl.startsWith('http') ? p.imageUrl : pageContext.request.contextPath.concat('/').concat(p.imageUrl)}" alt="${p.name}">
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="fas fa-pills" style="font-size:40px;color:#ccc;"></i>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-spec">${p.specification}</div>
+                            <div class="product-price">¥${p.price}</div>
+                        </div>
+                        <div class="product-stock">库存：${p.stock}</div>
                     </div>
                 </a>
                 </c:forEach>
@@ -152,5 +188,29 @@
     </c:choose>
 </div>
 <div class="footer"><p>©2026 药房网商城 版权所有</p></div>
+<script>
+function setView(mode) {
+    var grid = document.getElementById('productGrid');
+    var list = document.getElementById('productList');
+    var btns = document.querySelectorAll('.view-mode button');
+    if (mode === 'list') {
+        grid.style.display = 'none';
+        list.style.display = 'flex';
+        btns[0].classList.remove('active');
+        btns[1].classList.add('active');
+        localStorage.setItem('productView', 'list');
+    } else {
+        grid.style.display = 'grid';
+        list.style.display = 'none';
+        btns[0].classList.add('active');
+        btns[1].classList.remove('active');
+        localStorage.setItem('productView', 'grid');
+    }
+}
+(function() {
+    var saved = localStorage.getItem('productView');
+    if (saved === 'list') setView('list');
+})();
+</script>
 </body>
 </html>

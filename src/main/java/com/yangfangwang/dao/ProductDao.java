@@ -89,6 +89,28 @@ public class ProductDao {
         return list;
     }
 
+    public List<Product> findOnlineByCategories(String categoryIds, int limit) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT p.*, c.name as category_name FROM product p LEFT JOIN category c ON p.category_id = c.id WHERE p.status=1 AND p.category_id IN (" + categoryIds + ") ORDER BY p.id DESC LIMIT ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, limit);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(mapProduct(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn, stmt, rs);
+        }
+        return list;
+    }
+
     public List<Product> findByCategory(int categoryId, PageUtil page) {
         List<Product> list = new ArrayList<>();
         String countSql = "SELECT COUNT(*) FROM product WHERE category_id=? AND status=1";

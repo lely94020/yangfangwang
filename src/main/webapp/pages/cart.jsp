@@ -83,7 +83,7 @@
                     <div class="item-info">
                         <div class="item-img">
                             <c:choose>
-                                <c:when test="${not empty item.imageUrl}"><img src="${item.imageUrl}" alt="${item.productName}"></c:when>
+                                <c:when test="${not empty item.imageUrl}"><img src="${item.imageUrl.startsWith('http') ? item.imageUrl : pageContext.request.contextPath.concat('/').concat(item.imageUrl)}" alt="${item.productName}"></c:when>
                                 <c:otherwise><i class="fas fa-pills" style="font-size:30px;color:#ccc;"></i></c:otherwise>
                             </c:choose>
                         </div>
@@ -152,7 +152,16 @@ function changeQty(btn, delta) {
     xhr.send('action=update&id=' + form.querySelector('[name=id]').value + '&quantity=' + val);
 }
 function checkout() {
-    window.location.href = '${pageContext.request.contextPath}/cart?action=list';
+    var form = document.createElement('form');
+    form.method = 'post';
+    form.action = '${pageContext.request.contextPath}/cart';
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'action';
+    input.value = 'checkout';
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
 }
 </script>
 </body>

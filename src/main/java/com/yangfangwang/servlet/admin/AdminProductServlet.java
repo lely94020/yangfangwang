@@ -6,13 +6,18 @@ import com.yangfangwang.model.Product;
 import com.yangfangwang.util.PageUtil;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet("/admin/product")
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024, fileSizeThreshold = 1024 * 1024)
 public class AdminProductServlet extends HttpServlet {
 
     private ProductDao productDao = new ProductDao();
@@ -108,7 +113,7 @@ public class AdminProductServlet extends HttpServlet {
         p.setPrice(Double.parseDouble(req.getParameter("price")));
         p.setStock(Integer.parseInt(req.getParameter("stock")));
         p.setStatus(req.getParameter("status") != null ? Integer.parseInt(req.getParameter("status")) : 0);
-        p.setImageUrl(req.getParameter("imageUrl"));
+        p.setImageUrl(uploadFile(req));
 
         if (productDao.insert(p)) {
             resp.sendRedirect(req.getContextPath() + "/admin/product?action=list");
@@ -138,7 +143,11 @@ public class AdminProductServlet extends HttpServlet {
         p.setPrice(Double.parseDouble(req.getParameter("price")));
         p.setStock(Integer.parseInt(req.getParameter("stock")));
         p.setStatus(req.getParameter("status") != null ? Integer.parseInt(req.getParameter("status")) : 0);
-        p.setImageUrl(req.getParameter("imageUrl"));
+
+        String uploaded = uploadFile(req);
+        if (uploaded != null) {
+            p.setImageUrl(uploaded);
+        }
 
         if (productDao.update(p)) {
             resp.sendRedirect(req.getContextPath() + "/admin/product?action=list");
@@ -161,5 +170,30 @@ public class AdminProductServlet extends HttpServlet {
         int status = Integer.parseInt(req.getParameter("status"));
         productDao.updateStatus(id, status);
         resp.sendRedirect(req.getContextPath() + "/admin/product?action=list");
+    }
+
+    private String uploadFile(HttpServletRequest req) {
+        try {
+            Part filePart = req.getPart("imageFile");
+            if (filePart == null || filePart.getSize() == 0) return null;
+
+            String submittedFileName = filePart.getSubmittedFileName();
+            if (submittedFileName == null || submittedFileName.isEmpty()) return null;
+
+            String ext = "";
+            int dot = submittedFileName.lastIndexOf('.');
+            if (dot > 0) ext = submittedFileName.substring(dot);
+
+            String fileName = UUID.randomUUID().toString() + ext;
+            String uploadDir = "/Users/a1/IdeaProjects/yangfangwang/uploads/products";
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            filePart.write(uploadDir + File.separator + fileName);
+            return "uploads/products/" + fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

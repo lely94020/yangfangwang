@@ -123,7 +123,7 @@ public class CartServlet extends HttpServlet {
                     orderDao.insertItem(oi);
                 }
                 cartDao.deleteByMemberId(member.getId());
-                resp.sendRedirect(req.getContextPath() + "/order?action=view&id=" + orderId);
+                resp.sendRedirect(req.getContextPath() + "/order?action=list");
                 return;
             }
         }

@@ -102,14 +102,6 @@
                         <span>下单时间：<fmt:formatDate value="${o.createTime}" pattern="yyyy-MM-dd HH:mm"/></span>
                         <span class="status-badge status-badge-${o.status}">${o.statusText}</span>
                     </div>
-                    <c:forEach items="${o.items}" var="item">
-                    <div class="order-item">
-                        <span class="name">${item.productName}</span>
-                        <span class="price">¥${item.price}</span>
-                        <span class="qty">×${item.quantity}</span>
-                        <span class="price">¥${item.subtotal}</span>
-                    </div>
-                    </c:forEach>
                     <div class="order-card-footer">
                         <div class="order-total">
                             合计：<span class="amount">¥${o.totalAmount}</span>
@@ -117,7 +109,11 @@
                         <div>
                             <a href="${pageContext.request.contextPath}/order?action=view&id=${o.id}" class="btn btn-primary">查看详情</a>
                             <c:if test="${o.status == 0}">
-                                <a href="${pageContext.request.contextPath}/order?action=cancel&id=${o.id}" class="btn btn-danger" onclick="return confirm('确认取消该订单？')">取消订单</a>
+                                <form action="${pageContext.request.contextPath}/order" method="post" style="display:inline;" onsubmit="return confirm('确认取消该订单？')">
+                                    <input type="hidden" name="action" value="cancel">
+                                    <input type="hidden" name="id" value="${o.id}">
+                                    <button type="submit" class="btn btn-danger">取消订单</button>
+                                </form>
                             </c:if>
                         </div>
                     </div>

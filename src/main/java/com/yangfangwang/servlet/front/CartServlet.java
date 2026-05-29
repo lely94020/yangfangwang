@@ -49,6 +49,20 @@ public class CartServlet extends HttpServlet {
                 resp.setContentType("application/json");
                 resp.getWriter().write("{\"count\": " + count + "}");
                 break;
+            case "checkout":
+                List<Cart> checkoutItems = cartDao.findByMemberId(member.getId());
+                if (checkoutItems.isEmpty()) {
+                    resp.sendRedirect(req.getContextPath() + "/cart");
+                    return;
+                }
+                double total = 0;
+                for (Cart item : checkoutItems) {
+                    total += item.getSubtotal();
+                }
+                req.setAttribute("checkoutItems", checkoutItems);
+                req.setAttribute("totalAmount", total);
+                req.getRequestDispatcher("/pages/checkout.jsp").forward(req, resp);
+                break;
             default:
                 req.setAttribute("cartItems", cartDao.findByMemberId(member.getId()));
                 req.getRequestDispatcher("/pages/cart.jsp").forward(req, resp);

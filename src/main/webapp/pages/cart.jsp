@@ -38,7 +38,7 @@
         .footer-right{display:flex;align-items:center;}
         .total-text{font-size:14px;color:#333;margin-right:20px;}
         .total-price{font-size:20px;color:#e74c3c;font-weight:bold;margin-right:20px;}
-        .checkout-btn{background:#d32f2f;color:white;border:none;padding:12px 40px;font-size:16px;cursor:pointer;border-radius:3px;}
+        .checkout-btn{background:#d32f2f;color:white;border:none;padding:12px 40px;font-size:16px;cursor:pointer;border-radius:3px;display:inline-block;text-decoration:none;}
         .empty-cart{text-align:center;padding:60px 0;color:#999;}
         .empty-cart i{font-size:64px;display:block;margin-bottom:15px;color:#ddd;}
         .empty-cart a{color:#409EFF;font-size:14px;}
@@ -107,7 +107,11 @@
                     </div>
                     <div class="item-subtotal">¥<fmt:formatNumber value="${item.price * item.quantity}" pattern="#0.00"/></div>
                     <div class="item-actions">
-                        <a href="${pageContext.request.contextPath}/cart?action=delete&id=${item.id}" onclick="return confirm('确定要删除吗？')">删除</a>
+                        <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;" onsubmit="return confirm('确定要删除吗？')">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="id" value="${item.id}">
+                            <button type="submit" style="background:none;border:none;color:#f56c6c;cursor:pointer;font-size:12px;">删除</button>
+                        </form>
                     </div>
                 </div>
                 </c:forEach>
@@ -129,7 +133,7 @@
         <div class="footer-right">
             <div class="total-text">合计：</div>
             <div class="total-price" id="finalTotal">¥<fmt:formatNumber value="${cartItems.stream().map(i -> i.price * i.quantity).sum()}" pattern="#0.00"/></div>
-            <button class="checkout-btn" onclick="checkout()">去结算</button>
+            <a href="${pageContext.request.contextPath}/cart?action=checkout" class="checkout-btn">去结算</a>
         </div>
     </div>
     </c:if>
@@ -144,24 +148,11 @@ function changeQty(btn, delta) {
     if (val < 1) val = 1;
     input.value = val;
     hidden.value = val;
-    // Submit to update
     var xhr = new XMLHttpRequest();
     xhr.open('POST', form.action, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() { location.reload(); };
     xhr.send('action=update&id=' + form.querySelector('[name=id]').value + '&quantity=' + val);
-}
-function checkout() {
-    var form = document.createElement('form');
-    form.method = 'post';
-    form.action = '${pageContext.request.contextPath}/cart';
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'action';
-    input.value = 'checkout';
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
 }
 </script>
 </body>
